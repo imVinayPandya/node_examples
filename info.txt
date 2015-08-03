@@ -1,0 +1,1 @@
+this is some content here. i am using this file into node.js file system programming which is good example of callback function. somthing is news
