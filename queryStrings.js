@@ -8,4 +8,3 @@ console.log(querystring.stringify({ foo: 'bar', baz: ['qux', 'quux'], corge: '' 
 
 //query string to json data
 console.log(querystring.parse('foo=bar&baz=qux&baz=quux&corge'));
-
