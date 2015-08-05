@@ -26,6 +26,28 @@ client.on('message', function(channel, message) {
 
 //client.subscribe("hello nice one");
 
-client.set("string key", "string val", redis.print);
+client.hset(['vinayPandya', "string key", "string val"], function(error, reply) {
+    if(error) {
+        console.log("Error: "+error);
+    }
+
+    console.log("Replay: "+reply);
+    client.end();
+});
+
+client.hget(['vinayPandya', 'string key'], function(error, reply) {
+    if(error) {
+        console.log('error: '+error);
+    }
+
+    console.log('replay: '+reply)
+});
+
+client.hgetall(['vinayPandya'], function(error, reply) {
+    if(error) {
+        console.log('error; '+error);
+    }
+    console.log(reply);
+});
 
 //client.message("this is message");
