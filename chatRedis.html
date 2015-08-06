@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+    <title>Chat Redis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+        form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+        #online {width: 300px; height: 1000px; float:left; background-color: black; color: white;}
+        #typing { display: none; float: right; top: 10px; padding: 5px; background-color: green; color: white; width: auto; height: 20px; }
+    </style>
+    <script>
+
+    </script>
+</head>
+<body>
+<div id="online">
+    <ul id="users"></ul>
+</div>
+
+<div id="typing"></div>
+
+<ul id="messages"></ul>
+<input type="hidden" id="yourID" value=""/>
+<form action="">
+    <input id="m" autocomplete="off" /><button>Send</button>
+</form>
+
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+    var socket = io();
+    var person;
+    var personID = {};
+    var userData = {};
+    $( document ).ready(function() {
+        //$('#users').append($('<li>').text('you: '+person));
+        // set userid in hidden field
+        person = prompt("Please enter your name", "Harry Potter");
+        socket.emit('user name', person);
+
+    });
+
+    socket.on('connect', function(){
+        personID = socket.io.engine.id;
+        $('#yourID').val(personID);
+    });
+
+    socket.on('update-users', function(users) {
+        userData = users;
+        var userList = "";
+        console.log(users);
+        for (var i = 0; i < users.length; i++) {
+            if(users[i] != null) {
+                userList += "<li id='"+users[i].id+"'>"+users[i].name+"</li>";
+            }
+        }
+
+        $('#users').html(userList);
+    });
+
+    $('form').submit(function(){
+        socket.emit('chat message', person, $('#m').val());
+        $('#messages').append($('<li>').text('you: '+$('#m').val()));
+        $('#m').val('');
+        return false;
+    });
+
+    $('#m').keypress(function() {
+        socket.emit('keypress', $('#yourID').val() );
+    });
+
+    socket.on('keypress', function(typingID){
+        var userName = "";
+        for (var i = 0; i < userData.length; i++) {
+            //console.log(userData);
+            if(userData[i] != null && userData[i].id == typingID) {
+                userName = userData[i].name;
+            }
+        }
+
+        $('#'+typingID).text(userName+" is Typing........");
+        //$('#'+personID).css("background-color", "green");
+        //$('#typing').html(msg);
+        console.log(typingID);
+        setTimeout(function() {
+            //$('#typing').css("display", "none");
+            $('#'+typingID).text(userName);
+        }, 2000);
+    });
+
+    socket.on('chat message', function(name, msg){
+        $('#messages').append($('<li>').text(name+": "+msg));
+    });
+
+
+</script>
+</body>
+</html>

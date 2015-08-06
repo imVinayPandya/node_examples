@@ -19,6 +19,7 @@ io.on('connection', function(socket) {
             name: name,
             id: socket.id
         });
+        console.log(onlineUsers);
         io.emit('update-users', onlineUsers);
     });
 

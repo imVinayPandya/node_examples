@@ -35,12 +35,29 @@ client.hset(['vinayPandya', "string key", "string val"], function(error, reply) 
     client.end();
 });
 
+client.hset(['vinayPandya', "UserID", "UserName"], function(error, reply) {
+    if(error) {
+        console.log("Error: "+error);
+    }
+
+    console.log("Replay: "+reply);
+    client.end();
+});
+
 client.hget(['vinayPandya', 'string key'], function(error, reply) {
     if(error) {
         console.log('error: '+error);
     }
 
     console.log('replay: '+reply)
+});
+
+client.hdel(['vinayPandya', 'string key'], function(error, reply) {
+    if(error) {
+        console.log('error: '+error);
+    }
+
+    console.log('deleted: '+reply)
 });
 
 client.hgetall(['vinayPandya'], function(error, reply) {
