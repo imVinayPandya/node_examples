@@ -26,7 +26,7 @@ transporter.sendMail({
 
 
 /*
-//gamil example is working like a charm
+//this is gmail Auth:gamil example is working like a charm
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
